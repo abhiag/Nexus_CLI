@@ -18,4 +18,5 @@ cargo nexus new nexus-project
 echo "Navigating into the Nexus project directory..."
 cd nexus-project
 
-echo "Nexus project setup is complete!"
+echo "Prover is Starting"
+curl https://cli.nexus.xyz/ | sh
