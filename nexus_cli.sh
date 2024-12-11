@@ -15,6 +15,10 @@ sudo apt install -y protobuf-compiler
 echo "Installing screen..."
 sudo apt install -y screen
 
+# Start a new screen session named "nexusgac"
+echo "Starting screen session nexusgac..."
+screen -S nexusgac bash -c
+
 echo "Installing Rust..."
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
@@ -27,13 +31,10 @@ rustup target add riscv32i-unknown-none-elf
 echo "Installing Nexus cargo tools..."
 cargo install --git https://github.com/nexus-xyz/nexus-zkvm cargo-nexus --tag 'v0.2.4'
 
-# Start a new screen session named "nexusgac"
-echo "Starting screen session nexusgac..."
-screen -S nexusgac bash -c
-
 echo "Creating a new Nexus project..."
 cargo nexus new nexus-project
 
 echo "Prover is Starting"
-curl https://cli.nexus.xyz/ | sh
+screen -S nexusgac bash -c "curl https://cli.nexus.xyz/ | sh"
+
 
