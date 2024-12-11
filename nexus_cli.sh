@@ -1,4 +1,4 @@
-echo '#!/bin/bash
+#!/bin/bash
 
 # Update and upgrade the system
 echo "Updating and upgrading the system..."
@@ -43,5 +43,3 @@ screen -dmS nexusgac bash -c "
 
   # Setup complete
   echo 'Nexus project setup complete!'
-'
-' > setup_nexus.sh
