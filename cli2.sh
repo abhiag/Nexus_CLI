@@ -15,8 +15,5 @@ cargo install --git https://github.com/nexus-xyz/nexus-zkvm cargo-nexus --tag 'v
 echo "Creating a new Nexus project..."
 cargo nexus new nexus-project
 
-echo "Navigating into the Nexus project directory..."
-cd nexus-project
-
 echo "Prover is Starting"
 curl https://cli.nexus.xyz/ | sh
