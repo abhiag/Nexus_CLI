@@ -29,7 +29,7 @@ cargo install --git https://github.com/nexus-xyz/nexus-zkvm cargo-nexus --tag 'v
 
 # Start a new screen session named "nexusgac"
 echo "Starting screen session nexusgac..."
-screen -S nexusgac
+screen -S nexusgac bash -c
 
 echo "Creating a new Nexus project..."
 cargo nexus new nexus-project
