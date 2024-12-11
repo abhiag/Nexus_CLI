@@ -1,31 +1,47 @@
-#!/bin/bash
+echo '#!/bin/bash
 
 # Update and upgrade the system
+echo "Updating and upgrading the system..."
 sudo apt update && sudo apt upgrade -y
 
 # Install necessary packages
-sudo apt install -y build-essential pkg-config libssl-dev git-all screen protobuf-compiler
+echo "Installing build-essential, pkg-config, libssl-dev, git-all..."
+sudo apt install -y build-essential pkg-config libssl-dev git-all
 
-# Start a screen session named "nexusgac"
-screen -dmS nexusgac bash -c '
-# Install Rust
-curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+echo "Installing protobuf-compiler..."
+sudo apt install -y protobuf-compiler
 
-# Source Rust environment
-. "$HOME/.cargo/env"
+# Install screen
+echo "Installing screen..."
+sudo apt install -y screen
 
-# Add RISC-V target
-rustup target add riscv32i-unknown-none-elf
+# Start a new screen session named "nexusgac"
+echo "Starting screen session nexusgac..."
+screen -dmS nexusgac bash -c "
+  # Install Rust
+  echo 'Installing Rust...'
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
-# Install Nexus cargo tools
-cargo install --git https://github.com/nexus-xyz/nexus-zkvm cargo-nexus --tag "v0.2.4"
+  # Source Rust environment
+  echo 'Sourcing Rust environment...'
+  . \"\$HOME/.cargo/env\"
 
-# Create a new Nexus project
-cargo nexus new nexus-project
+  # Add RISC-V target
+  echo 'Adding RISC-V target...'
+  rustup target add riscv32i-unknown-none-elf
 
-# Navigate into the project directory
-cd nexus-project
+  # Install Nexus cargo tools
+  echo 'Installing Nexus cargo tools...'
+  cargo install --git https://github.com/nexus-xyz/nexus-zkvm cargo-nexus --tag v0.2.4
 
-# Installation complete
-echo "Nexus project setup complete!"
+  # Create a new Nexus project
+  echo 'Creating new Nexus project...'
+  cargo nexus new nexus-project
+
+  # Navigate into the project directory
+  cd nexus-project
+
+  # Setup complete
+  echo 'Nexus project setup complete!'
 '
+' > setup_nexus.sh
