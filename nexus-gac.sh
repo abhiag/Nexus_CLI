@@ -21,25 +21,27 @@ sudo apt install -y build-essential pkg-config libssl-dev git-all
 echo "Installing protobuf-compiler..."
 sudo apt install -y protobuf-compiler
 
-# Install screen
-echo "Installing screen..."
-sudo apt install -y screen
+# Exit on error
+set -e
 
-echo "Installing Rust..."
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+echo "🚀 Installing Rust..."
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
-echo "Sourcing Rust environment..."
-. "$HOME/.cargo/env"
+# Load Rust environment
+source $HOME/.cargo/env
 
-echo "Adding RISC-V target..."
+echo "✅ Rust installed: $(rustc --version)"
+
+echo "🔧 Adding RISC-V target..."
 rustup target add riscv32i-unknown-none-elf
+echo "✅ RISC-V target added."
 
-echo "Installing Nexus cargo tools..."
-cargo install --git https://github.com/nexus-xyz/nexus-zkvm cargo-nexus --tag 'v0.2.4'
+echo "🌍 Installing Nexus CLI..."
+curl -fsSL https://cli.nexus.xyz/ | sh
 
-# Start a new screen session named "nexusgac"
-echo "Starting screen session nexusgac..."
-screen -S nexusgac
+echo "✅ Nexus CLI installed: $(nexus-cli --version 2>/dev/null || echo 'Installation completed')"
+
+echo "🎉 Installation complete!"
 
 # Final message
 echo "**********************************************"
