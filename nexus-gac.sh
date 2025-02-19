@@ -14,13 +14,6 @@ echo "**********************************************"
 echo "Updating and upgrading the system..."
 sudo apt update && sudo apt upgrade -y
 
-# Install necessary packages
-echo "Installing build-essential, pkg-config, libssl-dev, git-all..."
-sudo apt install -y build-essential pkg-config libssl-dev git-all
-
-echo "Installing protobuf-compiler..."
-sudo apt install -y protobuf-compiler
-
 # Exit on error
 set -e
 
