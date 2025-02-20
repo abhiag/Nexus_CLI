@@ -45,7 +45,7 @@ if [ -d "$REPO_PATH" ]; then
   echo "$REPO_PATH exists. Updating."
   (
     cd "$REPO_PATH" || exit
-    git stash
+    git stash push -u "update_stash" > /dev/null 2>&1  # Stash changes, suppress output
     git fetch --tags
   )
 else
@@ -60,7 +60,7 @@ fi
 # -----------------------------------------------------------------------------
 (
   cd "$REPO_PATH" || exit
-  git -c advice.detachedHead=false checkout "$(git rev-list --tags --max-count=1)"
+  git -c advice.detachedHead=false checkout "$(git describe --tags --abbrev=0 2>/dev/null || git rev-list --tags --max-count=1)"
 )
 
 # -----------------------------------------------------------------------------
@@ -68,13 +68,28 @@ fi
 # -----------------------------------------------------------------------------
 while true; do
   echo "Starting Nexus CLI..."
+
+  # Trap SIGINT (Ctrl+C) to gracefully exit the loop
+  trap "echo 'Exiting...'; exit 0" INT
+
   (
-    cd "$REPO_PATH/clients/cli" || exit
-    yes "y" | cargo run -r -- start --env beta  # Auto-confirm prompts
+    cd "$REPO_PATH/clients/cli" || exit 1  # Exit with error code if cd fails
+    yes "y" | cargo run -r -- start --env beta
   ) < /dev/tty
 
-  echo "Nexus CLI stopped. Restarting in 5 seconds..."
-  sleep 5
+  # Check the exit code of the cargo run command.
+  exit_code=$?
+
+  if [ $exit_code -eq 0 ]; then
+    echo "Nexus CLI exited normally."
+    break # Exit the loop if the command exited cleanly (not killed)
+  elif [ $exit_code -eq 130 ]; then  # Check if it was interrupted (Ctrl+C)
+    echo "Nexus CLI interrupted. Exiting..."
+    exit 0
+  else
+    echo "Nexus CLI crashed (exit code: $exit_code). Restarting in 5 seconds..."
+    sleep 5
+  fi
 done
 
 echo "🎉 Installation complete!"
